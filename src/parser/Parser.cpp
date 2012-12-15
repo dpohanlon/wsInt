@@ -11,6 +11,7 @@ Parser::Parser(std::string tokens)
 void Parser::parse(void)
 {
     parseIMP();
+    end();
 }
 void Parser::parseIMP(void)
 {
@@ -205,7 +206,12 @@ void Parser::flowIMP(void)
             push("Return");
         }
     }
-    else if (tok[tkp] == 'C'){
+}
+
+void Parser::end(void)
+{
+    // IMP: Flow::End
+    if (tok[tkp] == 'C'){
         if (tok[tkp + 1] == 'C'){
             tkp += 2;
             push("End");
@@ -275,5 +281,5 @@ bool Parser::accept(char c)
 
 void Parser::error(std::string error, int itok)
 {
-    std::cout << "ERROR: " << error << itok << "," << tok[itok] << std::endl;
+    std::cout << "ERROR: " << error << itok << ":" << tok[itok - 1] << std::endl;
 }

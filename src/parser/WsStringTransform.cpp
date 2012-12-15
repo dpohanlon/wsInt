@@ -1,28 +1,28 @@
 #include "WsStringTransform.h"
 
-WsStringTransform::WsStringTransform(std::ifstream * wsFile)
+WsStringTransform::WsStringTransform(std::ifstream & wsFile)
 {
 
-    char dumChar;
+    char dum;
     std::ostringstream wsStrStr;
 
-    if (wsFile->is_open()){
-        while (*wsFile >> std::noskipws >> dumChar){
-            wsStrStr << dumChar;
+    if (wsFile.is_open()){
+        while (wsFile >> std::noskipws >> dum){
+            wsStrStr << dum;
         }
         this->wsString = stringTransform(wsStrStr.str());
     }
 }
 
-std::string WsStringTransform::stringTransform(std::string wsString)
+std::string WsStringTransform::stringTransform(std::string ws)
 {
-    std::string tString;
+    std::string tWs;
     std::string::iterator si;
 
-    for (si = wsString.begin(); si != wsString.end(); ++si){
-        tString.push_back(charTransform(*si));
+    for (si = ws.begin(); si != ws.end(); ++si){
+        tWs.push_back(charTransform(*si));
     }
-    return tString;
+    return tWs;
 }
 
 char WsStringTransform::charTransform(char wsChar)

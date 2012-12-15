@@ -9,7 +9,7 @@
 class WsStringTransform
 {
 public:
-    WsStringTransform(std::ifstream * wsFile);
+    WsStringTransform(std::ifstream & wsFile);
 
     std::string getTransformedString(void){ return this->wsString; }
 

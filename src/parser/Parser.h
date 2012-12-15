@@ -66,6 +66,8 @@ private:
     void ioIMP(void);
     void flowIMP(void);
 
+    void end(void);
+
     void parseNumber(void);
     void parseLabel(void);
 

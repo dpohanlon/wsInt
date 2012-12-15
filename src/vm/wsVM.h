@@ -22,15 +22,18 @@ private:
     typedef void (wsVM::*opPtr)(void);
     typedef std::map<std::string, opPtr> opMap;
 
-    int pc;
-    int sp;
+    unsigned int pc;
+    unsigned int rp;
 
     std::vector<std::string> prog;
     std::stack<int> stack;
+    std::map<int, int> heap;
+    std::map<std::string, int> marks;
 
     std::vector<std::string> vectorProg(std:: string progIn);
     std::string getOp(std::string ins);
     std::string getData(std::string ins);
+    void fillMarks(void);
 
     opMap ops;
 

@@ -1,6 +1,6 @@
 #include "wsVM.h"
 
-wsVM::wsVM(std::string progIn) : pc(0), sp(0)
+wsVM::wsVM(std::string progIn) : pc(0), rp(0)
 {
     this->prog = vectorProg(progIn);
 
@@ -73,14 +73,29 @@ void wsVM::runProg(void)
     opMap::iterator io;
     opPtr op;
 
-    for (is = prog.begin(); is != prog.end(); ++is){
-        io = ops.find(getOp(*is));
+    fillMarks();
 
+    while(pc < prog.size()){
+        std::cout << "PC(" << pc << ")" << std::endl;
+        io = ops.find(getOp(prog[pc]));
         if (io != ops.end()){
             op = io->second;
             (this->*op)();
         }
-        pc++; // No idea how to handle this!
+        pc++;
+    }
+}
+
+void wsVM::fillMarks(void)
+{
+    std::vector<std::string>::iterator is;
+    unsigned int p = 0;
+
+    for(is = prog.begin(); is != prog.end(); ++is){
+        if (getOp(*is) == "Mark"){
+            marks.insert(std::make_pair(getData(*is), p));
+        }
+        p++;
     }
 }
 
@@ -93,8 +108,10 @@ int wsVM::sPop(void)
 {
     int d = 0;
 
-    d = stack.top();
-    stack.pop();
+    if (stack.size() > 0){
+        d = stack.top();
+        stack.pop();
+    }
 
     return d;
 }
@@ -106,81 +123,108 @@ void wsVM::push(void)
 
 void wsVM::dup(void)
 {
-
+    stack.push(stack.top());
 }
 void wsVM::swap(void)
 {
+    int temp1 = sPop();
+    int temp2 = sPop();
 
+    stack.push(temp1);
+    stack.push(temp2);
 }
 
 void wsVM::discard(void)
 {
-
+    stack.pop();
 }
 
 void wsVM::plus(void)
 {
-
+    int lhs = sPop();
+    int rhs = sPop();
+    stack.push(lhs + rhs);
 }
 
 void wsVM::minus(void)
 {
-
+    int lhs = sPop();
+    int rhs = sPop();
+    stack.push(lhs - rhs);
 }
 
 void wsVM::times(void)
 {
-
+    int lhs = sPop();
+    int rhs = sPop();
+    stack.push(rhs * lhs);
 }
 
 void wsVM::divide(void)
 {
-
+    int lhs = sPop();
+    int rhs = sPop();
+    stack.push(lhs / rhs);
 }
 
 void wsVM::modulo(void)
 {
-
+    int lhs = sPop();
+    int rhs = sPop();
+    stack.push(lhs % rhs);
 }
 
 void wsVM::store(void)
 {
-
+    int addr = sPop();
+    heap.insert(std::make_pair(addr, sPop()));
 }
 
 void wsVM::retrieve(void)
 {
-
+    std::map<int, int>::iterator im;
+    im = heap.find(sPop());
+    if (im != heap.end()) stack.push(im->second);
+    else std::cout << "ERROR: Entry not found in heap!" << std::endl;
 }
 
 void wsVM::mark(void)
 {
-
+    // Does nothing - marks should already be populated by first pass
+    //marks.insert(std::make_pair(getData(prog[pc]), pc));
 }
 
 void wsVM::call(void)
 {
-
+    rp = pc;
+    jump();
 }
 
 void wsVM::jump(void)
 {
-
+    std::map<std::string, int>::iterator p;
+    p = marks.find(getData(prog[pc]));
+    if (p != marks.end()) this->pc = p->second;
+    else std::cout << "ERROR: Mark point not found!" << std::endl;
 }
 
 void wsVM::jumpZ(void)
 {
-
+    if (sPop() == 0){
+        jump();
+    }
 }
 
 void wsVM::jumpN(void)
 {
-
+    if (sPop() < 0){
+        jump();
+    }
 }
 
 void wsVM::ret(void)
 {
-
+    pc = rp;
 }
 
 void wsVM::end(void)
@@ -190,20 +234,20 @@ void wsVM::end(void)
 
 void wsVM::writeChar(void)
 {
-
+    printf("%c", char(sPop()));
 }
 
 void wsVM::writeInt(void)
 {
-
+    printf("%i", sPop());
 }
 
 void wsVM::readChar(void)
 {
-
+    stack.push(getchar());
 }
 
 void wsVM::readInt(void)
 {
-
+    stack.push(getchar());
 }
