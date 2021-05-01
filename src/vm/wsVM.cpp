@@ -69,7 +69,6 @@ std::string wsVM::getData(std::string ins)
 
 void wsVM::runProg(void)
 {
-    std::vector<std::string>::iterator is;
     opMap::iterator io;
     opPtr op;
 
