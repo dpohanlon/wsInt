@@ -8,8 +8,13 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
+    if (argc != 2) {
+        cout << "usage: wsInt <file>" << endl;
+        return 1;
+    }
+
     ifstream wsFile;
-    wsFile.open("count.ws");
+    wsFile.open(argv[1]);
 
     WsStringTransform wsStr(wsFile);
 
@@ -23,6 +28,7 @@ int main(int argc, char const *argv[])
     cout << parser.getProg() << endl;
 
     wsVM vm(parser.getProg());
+    vm.runProg();
 
     return 0;
 }

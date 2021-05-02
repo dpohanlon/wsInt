@@ -184,7 +184,7 @@ void wsVM::retrieve(void)
     std::map<int, int>::iterator im;
     im = heap.find(sPop());
     if (im != heap.end()) stack.push(im->second);
-    else std::cout << "ERROR: Entry not found in heap!" << std::endl;
+    else stack.push(0);
 }
 
 void wsVM::mark(void)
