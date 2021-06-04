@@ -8,7 +8,7 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    if (argc != 2) {
+    if (argc != 2){
         cout << "usage: wsInt <file>" << endl;
         return 1;
     }

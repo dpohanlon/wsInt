@@ -1,6 +1,6 @@
 #include "wsVM.h"
 
-wsVM::wsVM(std::string progIn) : pc(0), rp(0)
+wsVM::wsVM(std::string progIn) : pc(0)
 {
     this->prog = vectorProg(progIn);
 
@@ -75,11 +75,14 @@ void wsVM::runProg(void)
     fillMarks();
 
     while(pc < prog.size()){
-        std::cout << "PC(" << pc << ")" << std::endl;
         io = ops.find(getOp(prog[pc]));
         if (io != ops.end()){
+            std::cout << "[" << pc << "]: " << prog[pc] << std::endl;
             op = io->second;
             (this->*op)();
+        }
+        else if (prog[pc] != ""){
+            std::cerr << "ERROR: Invalid op: " << prog[pc] << "!" << std::endl;
         }
         pc++;
     }
@@ -111,6 +114,9 @@ int wsVM::sPop(void)
         d = stack.top();
         stack.pop();
     }
+    else {
+        std::cerr << "ERROR: Stack empty!" << std::endl;
+    }
 
     return d;
 }
@@ -140,43 +146,44 @@ void wsVM::discard(void)
 
 void wsVM::plus(void)
 {
-    int lhs = sPop();
     int rhs = sPop();
+    int lhs = sPop();
     stack.push(lhs + rhs);
 }
 
 void wsVM::minus(void)
 {
-    int lhs = sPop();
     int rhs = sPop();
+    int lhs = sPop();
     stack.push(lhs - rhs);
 }
 
 void wsVM::times(void)
 {
-    int lhs = sPop();
     int rhs = sPop();
+    int lhs = sPop();
     stack.push(rhs * lhs);
 }
 
 void wsVM::divide(void)
 {
-    int lhs = sPop();
     int rhs = sPop();
+    int lhs = sPop();
     stack.push(lhs / rhs);
 }
 
 void wsVM::modulo(void)
 {
-    int lhs = sPop();
     int rhs = sPop();
+    int lhs = sPop();
     stack.push(lhs % rhs);
 }
 
 void wsVM::store(void)
 {
+    int val = sPop();
     int addr = sPop();
-    heap.insert(std::make_pair(addr, sPop()));
+    heap.insert(std::make_pair(addr, val));
 }
 
 void wsVM::retrieve(void)
@@ -195,7 +202,7 @@ void wsVM::mark(void)
 
 void wsVM::call(void)
 {
-    rp = pc;
+    calls.push(pc);
     jump();
 }
 
@@ -204,7 +211,7 @@ void wsVM::jump(void)
     std::map<std::string, int>::iterator p;
     p = marks.find(getData(prog[pc]));
     if (p != marks.end()) this->pc = p->second;
-    else std::cout << "ERROR: Mark point not found!" << std::endl;
+    else std::cerr << "ERROR: Mark point not found!" << std::endl;
 }
 
 void wsVM::jumpZ(void)
@@ -223,12 +230,18 @@ void wsVM::jumpN(void)
 
 void wsVM::ret(void)
 {
-    pc = rp;
+    if (calls.size() > 0){
+        pc = calls.top();
+        calls.pop();
+    }
+    else {
+        std::cerr << "ERROR: Call stack empty!" << std::endl;
+    }
 }
 
 void wsVM::end(void)
 {
-
+    pc = prog.size();
 }
 
 void wsVM::writeChar(void)

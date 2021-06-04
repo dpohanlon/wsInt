@@ -23,12 +23,12 @@ private:
     typedef std::map<std::string, opPtr> opMap;
 
     unsigned int pc;
-    unsigned int rp;
 
     std::vector<std::string> prog;
     std::stack<int> stack;
     std::map<int, int> heap;
     std::map<std::string, int> marks;
+    std::stack<unsigned int> calls;
 
     std::vector<std::string> vectorProg(std:: string progIn);
     std::string getOp(std::string ins);
