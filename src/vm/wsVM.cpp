@@ -77,7 +77,7 @@ void wsVM::runProg(void)
     while(pc < prog.size()){
         io = ops.find(getOp(prog[pc]));
         if (io != ops.end()){
-            std::cout << "[" << pc << "]: " << prog[pc] << std::endl;
+            // std::cout << "[" << pc << "]: " << prog[pc] << std::endl;
             op = io->second;
             (this->*op)();
         }

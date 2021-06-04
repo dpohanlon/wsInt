@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-// For convenience, three input characters 
+// For convenience, three input characters
 //        A => space, B => tab, C => either of CR/LF
 
 // Numbers are binary (A=0, B=1, C=terminator)
@@ -66,15 +66,13 @@ private:
     void ioIMP(void);
     void flowIMP(void);
 
-    void end(void);
-
     void parseNumber(void);
     void parseLabel(void);
 
     void push(char c);
     void push(std::string s);
 
-    bool accept(char c); 
+    bool accept(char c);
     void error(std::string error, int itok);
 
 };
