@@ -1,17 +1,22 @@
 #include <iostream>
 
-#include "Parser/WsStringTransform.h"
-#include "Parser/Parser.h"
+#include "parser/WsStringTransform.h"
+#include "parser/Parser.h"
 #include "vm/wsVM.h"
 
 using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    ifstream wsFile;
-    wsFile.open("count.ws");
+    if (argc != 2){
+        cout << "usage: wsInt <file>" << endl;
+        return 1;
+    }
 
-    WsStringTransform wsStr(&wsFile);
+    ifstream wsFile;
+    wsFile.open(argv[1]);
+
+    WsStringTransform wsStr(wsFile);
 
     wsFile.close();
 
@@ -23,6 +28,7 @@ int main(int argc, char const *argv[])
     cout << parser.getProg() << endl;
 
     wsVM vm(parser.getProg());
+    vm.runProg();
 
     return 0;
 }

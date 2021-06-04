@@ -20,23 +20,16 @@ std::string WsStringTransform::stringTransform(std::string ws)
     std::string::iterator si;
 
     for (si = ws.begin(); si != ws.end(); ++si){
-        tWs.push_back(charTransform(*si));
+        char wsChar = *si;
+        if (wsChar == ' '){
+            tWs.push_back('A');
+        }
+        else if (wsChar == '\t'){
+            tWs.push_back('B');
+        }
+        else if (wsChar == '\n'){
+            tWs.push_back('C');
+        }
     }
     return tWs;
-}
-
-char WsStringTransform::charTransform(char wsChar)
-{
-    if (wsChar == ' '){
-        return 'A';
-    }
-    else if (wsChar == '\t'){
-        return 'B';
-    }
-    else if (wsChar == '\n'){
-        return 'C';
-    }
-    else{
-        return wsChar; // Throw up parse exception - not ws
-    }
 }

@@ -17,8 +17,6 @@ private:
     std::string wsString;
 
     std::string stringTransform(std::string wsString);
-
-    char charTransform(char wsChar);
 };
 
 #endif
