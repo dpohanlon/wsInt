@@ -3,17 +3,17 @@
 #include <sstream>
 #include <map>
 
-#include "../Parser/Parser.h"
+#include "../src/parser/Parser.h"
 
 using namespace std;
 
-void test(const map<string, string> * ops);
+bool test(const map<string, string> * ops);
 
 int main(int argc, char const *argv[])
 {
     map<string, string> ops;
 
-    ops.insert(make_pair("AA", "Push "));
+    ops.insert(make_pair("AAABAC", "Push 010"));
     ops.insert(make_pair("ACA", "Dup"));
     ops.insert(make_pair("ACB", "Swap"));
     ops.insert(make_pair("ACC", "Discard"));
@@ -27,11 +27,11 @@ int main(int argc, char const *argv[])
     ops.insert(make_pair("BBA", "Store"));
     ops.insert(make_pair("BBB", "Retrieve"));
 
-    ops.insert(make_pair("CAA", "Mark "));
-    ops.insert(make_pair("CAB", "Call "));
-    ops.insert(make_pair("CAC", "Jump "));
-    ops.insert(make_pair("CBA", "JumpZ "));
-    ops.insert(make_pair("CBB", "JumpN "));
+    ops.insert(make_pair("CAAAC", "Mark 0"));
+    ops.insert(make_pair("CABBC", "Call 1"));
+    ops.insert(make_pair("CACAAC", "Jump 00"));
+    ops.insert(make_pair("CBAABC", "JumpZ 01"));
+    ops.insert(make_pair("CBBBAC", "JumpN 10"));
     ops.insert(make_pair("CBC", "Return"));
     ops.insert(make_pair("CCC", "End"));
 
@@ -40,12 +40,14 @@ int main(int argc, char const *argv[])
     ops.insert(make_pair("BCBA", "ReadChar"));
     ops.insert(make_pair("BCBB", "ReadInt"));
 
-    test(&ops);
-
-    return 0;
+    if (test(&ops)) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
-void test(const map<string, string> * ops)
+bool test(const map<string, string> * ops)
 {
     int i = 0;
     int passed = 0;
@@ -71,5 +73,5 @@ void test(const map<string, string> * ops)
 
     cout << endl << passed << "/" << i << " tests passed." << endl;
 
-    return;
+    return passed == i;
 }
